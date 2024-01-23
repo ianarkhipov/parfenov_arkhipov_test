@@ -1,10 +1,8 @@
-import {Component, Inject} from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormControl } from "@angular/forms";
 import { LoginService } from "./login.service";
-import {HttpClient} from "@angular/common/http";
-import {CookieService} from "ngx-cookie-service";
-
-
+import { HttpClient, HttpResponse } from "@angular/common/http";
+import { CustomCookieService } from "./custom-cookie.service"; // Import your custom cookie service
 
 @Component({
   selector: 'app-root',
@@ -19,7 +17,7 @@ export class LoginComponent {
     password: ["", Validators.required],
   });
 
-  // Добавьте явные типы для formControl'ов
+  // Add explicit types for formControl's
   loginControl: FormControl = this.form.get('login') as FormControl;
   passwordControl: FormControl = this.form.get('password') as FormControl;
 
@@ -28,10 +26,9 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    @Inject(CookieService) private cookieService: CookieService,
+    private customCookieService: CustomCookieService, // Use your custom cookie service
     private loginService: LoginService,
-    ) { }
-
+  ) { }
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
@@ -39,17 +36,22 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.form.valid) {
-      // Используйте значений контролов напрямую
+      // Use control values directly
       const login = this.loginControl.value;
       const password = this.passwordControl.value;
 
-      this.loginService.login(login, password).subscribe(response => {
-        if (response && !response.hasError) {
-          this.loginService.saveTokens(response.data.tokens);
-        } else {
-          console.error('Ошибка при входе:', response.errors);
+      this.loginService.login(login, password).subscribe(
+        (response: HttpResponse<any>) => {
+          if (response && !response.body.hasError) {
+            this.customCookieService.saveTokens(response);
+          } else {
+            console.error('Error on login:', response.body.errors);
+          }
+        },
+        error => {
+          console.error('Error on login:', error);
         }
-      });
+      );
     }
   }
 }

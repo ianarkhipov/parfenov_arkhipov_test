@@ -2,8 +2,8 @@
 
 module.exports = {
   content: [
-    "./src/app/app.component.html",
-    "./src/app/app.component.css"
+    "./src/app/login.component.html",
+    "./src/app/login.component.css"
   ],
   theme: {
     colors: {

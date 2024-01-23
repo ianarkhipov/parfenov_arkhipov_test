@@ -27,13 +27,13 @@
       <div class="w-[410px] h-fit mb-[24px]">
         <p class="mb-[13px]">Логин*</p>
         <input placeholder="mail@simmmple.com"
-               class="w-full h-[50px] rounded-[5px] border-table-stroke border-[1px] border-solid" [formControl]="loginControl">
+               class="w-full h-[50px] rounded-[5px] border-table-stroke border-[1px] border-solid pl-[24px]" [formControl]="loginControl">
       </div>
 
       <div class="relative w-[410px] mb-[33px]">
         <p class="mb-[13px]">Пароль*</p>
         <input placeholder="Минимум 8 символов"
-               class="w-full h-[50px] rounded-[5px] border-table-stroke border-[1px] border-solid flex"
+               class="w-full h-[50px] rounded-[5px] border-table-stroke border-[1px] border-solid flex pl-[24px]"
                [type]="showPassword ? 'text' : 'password'" [formControl]="passwordControl">
         <span class="absolute top-[52px] right-[10px] " (click)="togglePasswordVisibility()">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">

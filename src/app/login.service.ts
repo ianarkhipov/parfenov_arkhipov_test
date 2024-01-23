@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import { CookieService } from 'ngx-cookie-service';
 import {Observable} from "rxjs";
+import {CustomCookieService} from "./custom-cookie.service";
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class LoginService {
 
     private apiUrl = 'http://51.158.107.27:82/api/login'
 
-  constructor(private http: HttpClient, private cookieService: CookieService) { }
+  constructor(private http: HttpClient, private cookieService: CustomCookieService) { }
   login(login: string, password: string): Observable<any> {
     const body = { login, password };
 
