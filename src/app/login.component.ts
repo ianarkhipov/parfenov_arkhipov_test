@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormControl } from "@angular/forms";
 import { LoginService } from "./login.service";
 import { HttpClient, HttpResponse } from "@angular/common/http";
-import { CustomCookieService } from "./custom-cookie.service"; // Import your custom cookie service
+import { CustomCookieService } from "./custom-cookie.service";
 
 @Component({
   selector: 'app-root',
@@ -11,6 +11,7 @@ import { CustomCookieService } from "./custom-cookie.service"; // Import your cu
 })
 export class LoginComponent {
   title = 'parfenov_arkhipov_test';
+  errorMessage = ''; // Добавляем переменную для хранения сообщения об ошибке
 
   form = this.fb.group({
     login: ["", Validators.required],
@@ -26,7 +27,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private customCookieService: CustomCookieService, // Use your custom cookie service
+    private customCookieService: CustomCookieService,
     private loginService: LoginService,
   ) { }
 
@@ -36,19 +37,20 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.form.valid) {
-      // Use control values directly
       const login = this.loginControl.value;
       const password = this.passwordControl.value;
 
       this.loginService.login(login, password).subscribe(
         (response: HttpResponse<any>) => {
           if (response && !response.body.hasError) {
-            this.customCookieService.saveTokens(response);
+            this.customCookieService.saveTokens(response.body);
           } else {
-            console.error('Error on login:', response.body.errors);
+            this.errorMessage = response.body.errors[0]; // Отображаем сообщение об ошибке
+            console.error('Error on login:', this.errorMessage);
           }
         },
         error => {
+          this.errorMessage = 'An unexpected error occurred.';
           console.error('Error on login:', error);
         }
       );

@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {CustomCookieService} from "./custom-cookie.service";
+import { HttpClient, HttpResponse } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { CustomCookieService } from "./custom-cookie.service";
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
 
-
-    private apiUrl = 'http://51.158.107.27:82/api/login'
+  private apiUrl = 'http://51.158.107.27:82/api/login';
 
   constructor(private http: HttpClient, private cookieService: CustomCookieService) { }
-  login(login: string, password: string): Observable<any> {
+
+  login(login: string, password: string): Observable<HttpResponse<any>> {
     const body = { login, password };
 
-    return this.http.post(this.apiUrl, body);
+    // Указываем observe: 'response' для получения полного объекта ответа
+    return this.http.post(this.apiUrl, body, { observe: 'response' });
   }
 
   saveTokens(tokens: any): void {
@@ -23,12 +24,3 @@ export class LoginService {
     this.cookieService.set('refreshToken', tokens.refreshToken);
   }
 }
-
-  // sendUserInfo(data: string) {
-  //   return this.http.post('http://51.158.107.27:82/api/login', data);
-  // }
-  // getData() {
-  //   return this.http.get('http://51.158.107.27:82/api/login');
-  // }
-
-// }
